@@ -2,101 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Exact Barcode Design</title>
+    <title>Fixed Width Barcode System</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* মেইন কন্টেইনার */
-        .page-wrapper {
-            width: 1000px; /* স্ক্রিনশটের চওড়া অনুপাত অনুযায়ী */
-            margin: 20px auto;
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; }
+        
+        .label-wrapper {
+            width: 500px; /* আপনার কার্ড বা রো এর ফিক্সড চওড়া */
+            margin: 0 auto;
             background: #fff;
+            border: 1px solid #ddd;
         }
 
-        /* প্রতিটি রো-এর ডিজাইন */
         .barcode-item {
-            border-bottom: 1px solid #ccc; /* স্ক্রিনশটের হালকা বর্ডার */
-            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        .shop-name {
-            font-size: 14px;
-            font-weight: bold;
-            margin: 0;
-            color: #000;
+        /* বারকোড কন্টেইনারের সাইজ ফিক্সড রাখা */
+        .barcode-container {
+            width: 200px; /* বারকোডটি সর্বোচ্চ কতটুকু চওড়া হবে */
+            margin: 0 auto;
         }
 
-        .product-name {
-            font-size: 12px;
-            margin: 1px 0;
-            color: #000;
+        svg {
+            width: 100%; /* কন্টেইনার অনুযায়ী নিজেকে এডজাস্ট করবে */
+            height: auto;
         }
 
-        /* বারকোডের আসল লুক */
-        svg.barcode {
-            width: 130px; 
-            height: 50px;
-            margin: 2px 0;
-        }
-
-        .price {
-            font-size: 13px;
-            font-weight: 500;
-            color: #000;
-            margin-top: -2px;
-        }
-
-        /* প্রিন্ট সেটআপ */
-        @media print {
-            body { background: none; }
-            .page-wrapper { width: 100%; margin: 0; border: none; }
-            .barcode-item { border-bottom: 1px solid #000; }
-        }
+        .info { font-size: 14px; margin-bottom: 5px; font-weight: bold; }
+        .price { font-size: 13px; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-<div class="page-wrapper">
+<div class="label-wrapper">
     <div class="barcode-item">
-        <div class="shop-name">Fashion Demo</div>
-        <div class="product-name">Smart Kurti</div>
-        <svg class="barcode" jsbarcode-value="86511159"></svg>
+        <div class="info">Fashion Demo - 8 Digits</div>
+        <div class="barcode-container">
+            <svg class="barcode" jsbarcode-value="86511159"></svg>
+        </div>
         <div class="price">Price 1,000.00 TK</div>
     </div>
 
     <div class="barcode-item">
-        <div class="shop-name">Fashion Demo</div>
-        <div class="product-name">Smart Kurti</div>
-        <svg class="barcode" jsbarcode-value="86511159"></svg>
-        <div class="price">Price 1,000.00 TK</div>
-    </div>
-
-    <div class="barcode-item">
-        <div class="shop-name">Fashion Demo</div>
-        <div class="product-name">Smart Kurti</div>
-        <svg class="barcode" jsbarcode-value="86511159"></svg>
-        <div class="price">Price 1,000.00 TK</div>
+        <div class="info">Fashion Demo - 15 Digits</div>
+        <div class="barcode-container">
+            <svg class="barcode" jsbarcode-value="123456789012345"></svg>
+        </div>
+        <div class="price">Price 1,200.00 TK</div>
     </div>
 </div>
 
 <script>
-    // বারকোডগুলো জেনারেট করার ফাংশন
+    // বারকোড রেন্ডার করার ফাংশন
     JsBarcode(".barcode").options({
         format: "CODE128",
-        displayValue: true, // বারকোডের নিচে নাম্বার দেখাবে
-        fontSize: 12,
-        height: 35,
-        width: 1.5,
+        displayValue: true,
+        fontSize: 14,
+        height: 40,
+        width: 2,      // বারের বেসিক পুরুত্ব
+        flat: true,    // এটি বারকোডকে সুন্দরভাবে ফিট করতে সাহায্য করে
         margin: 0
     }).init();
 </script>
