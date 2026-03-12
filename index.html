@@ -2,123 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Universal Barcode Print System</title>
+    <title>Perfect Barcode Print System</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
     <style>
-        /* ১. সাধারণ ভিউ সেটিংস */
+        /* পুরো পেজের সেটআপ */
         body {
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
         }
 
-        .print-area {
+        /* মেইন কন্টেইনার যা পুরো স্ক্রিন বা পেজ কভার করবে */
+        .barcode-container {
             width: 100%;
-            max-width: 800px; /* স্ক্রিনে দেখার জন্য */
-            margin: 0 auto;
-            background: white;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ২. প্রতিটি বারকোড লেবেলের ডিজাইন */
-        .barcode-card {
+        /* প্রতিটি রো-এর নিখুঁত ডিজাইন */
+        .barcode-row {
+            width: 100%;
+            border-bottom: 1.5px solid #000; /* কাটার জন্য গাঢ় কালো লাইন */
+            padding: 10px 0;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 15px 0;
-            border-bottom: 1px dashed #ccc; /* কাটার সুবিধার জন্য ড্যাশ লাইন */
-            background: white;
-            width: 100%;
             box-sizing: border-box;
-            page-break-inside: avoid; /* প্রিন্টের সময় যেন মাঝখান দিয়ে না কেটে যায় */
+            page-break-inside: avoid; /* প্রিন্টের সময় যেন রো ভেঙে না যায় */
         }
 
-        .brand { font-size: 12px; font-weight: bold; text-transform: uppercase; margin: 0; }
-        .name { font-size: 14px; margin: 2px 0; }
-        
-        .barcode-container {
-            width: 250px; /* ফিক্সড উইডথ */
+        .shop-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .product-name {
+            font-size: 12px;
+            margin: 2px 0;
+            font-weight: 500;
+        }
+
+        /* বারকোড বক্স - সংখ্যা বাড়লেও এটি ডিজাইন ভাঙবে না */
+        .barcode-svg-wrapper {
+            width: 180px; /* আপনার স্ক্রিনশটের অনুপাত অনুযায়ী */
             height: auto;
-            display: flex;
-            justify-content: center;
+            margin: 2px 0;
         }
 
-        svg { width: 100%; height: auto; }
+        svg {
+            width: 100%;
+            height: auto;
+        }
 
-        .price { font-size: 14px; font-weight: bold; margin-top: 2px; }
+        .price {
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: -2px;
+        }
 
-        /* ৩. প্রিন্টার সেটআপ (সবচেয়ে গুরুত্বপূর্ণ অংশ) */
+        /* প্রিন্টিং অপশন */
         @media print {
-            body { background: none; padding: 0; margin: 0; }
-            .print-area { max-width: 100%; border: none; }
-            
-            /* প্রতিটি লেবেলের পর কাটার জন্য স্পেস */
-            .barcode-card {
-                border-bottom: 1px solid #000; /* প্রিন্টে গাঢ় লাইন আসবে কাটার জন্য */
-                padding: 10px 0;
+            @page {
+                margin: 0; /* প্রিন্টারে এক্সট্রা মার্জিন বন্ধ করবে */
             }
-
-            /* প্রিন্ট বাটনের মতো অপ্রয়োজনীয় জিনিস হাইড করা */
-            .no-print { display: none; }
-        }
-
-        /* ফ্লোটিং প্রিন্ট বাটন */
-        .print-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            body {
+                margin: 0;
+            }
+            .barcode-row {
+                border-bottom: 1px solid #000;
+            }
         }
     </style>
 </head>
 <body>
 
-<button class="print-btn no-print" onclick="window.print()">Print Labels</button>
-
-<div id="print-zone" class="print-area">
+<div id="labels-wrapper" class="barcode-container">
     </div>
 
 <script>
-    // আপনার প্রোডাক্ট অ্যারে
-    const productList = [
-        { brand: "Fashion Demo", name: "Smart Kurti", code: "86511159", price: "1,000.00" },
-        { brand: "Fashion Demo", name: "Premium Panjabi", code: "998877665544", price: "2,500.00" },
-        { brand: "Fashion Demo", name: "Cotton Shirt", code: "11223344", price: "1,200.00" },
-        { brand: "Fashion Demo", name: "Ladies Bag", code: "ABC-102030", price: "3,200.00" }
+    // আপনার প্রোডাক্ট ডেটা অ্যারে (এখানে তথ্য যোগ করলে অটোমেটিক রো তৈরি হবে)
+    const products = [
+        { shop: "Fashion Demo", name: "Smart Kurti", code: "86511159", price: "1,000.00" },
+        { shop: "Fashion Demo", name: "Smart Kurti", code: "1234567890", price: "1,200.00" },
+        { shop: "Fashion Demo", name: "Smart Kurti", code: "99887766554433", price: "1,500.00" },
+        { shop: "Fashion Demo", name: "Smart Kurti", code: "11223344", price: "800.00" }
     ];
 
-    const container = document.getElementById('print-zone');
+    const wrapper = document.getElementById('labels-wrapper');
 
-    // ডাটা লুপ
-    productList.forEach((prod, index) => {
-        const card = document.createElement('div');
-        card.className = 'barcode-card';
-        card.innerHTML = `
-            <div class="brand">${prod.brand}</div>
-            <div class="name">${prod.name}</div>
-            <div class="barcode-container">
-                <svg id="barcode-${index}"></svg>
+    // লুপ চালিয়ে HTML তৈরি
+    products.forEach((item, index) => {
+        const rowHTML = `
+            <div class="barcode-row">
+                <div class="shop-name">${item.shop}</div>
+                <div class="product-name">${item.name}</div>
+                <div class="barcode-svg-wrapper">
+                    <svg id="barcode-${index}"></svg>
+                </div>
+                <div class="price">Price ${item.price} TK</div>
             </div>
-            <div class="price">Price ${prod.price} TK</div>
         `;
-        container.appendChild(card);
+        wrapper.innerHTML += rowHTML;
+    });
 
-        // বারকোড জেনারেট
-        JsBarcode(`#barcode-${index}`, prod.code, {
+    // সব ডাটার জন্য বারকোড রেন্ডার করা
+    products.forEach((item, index) => {
+        JsBarcode(`#barcode-${index}`, item.code, {
             format: "CODE128",
             displayValue: true,
             fontSize: 16,
-            height: 50,
+            height: 45,
             width: 2,
-            flat: true,
+            flat: true,  // সংখ্যা বাড়লে এটি বারকোডকে সংকুচিত করে ফিক্সড জায়গায় রাখবে
             margin: 0
         });
     });
