@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Barcode - Full Screen Universal</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <style>
+        /* ১. ইউনিভার্সাল রিসেট (সব প্রিন্টারে নিখুঁত দেখানোর জন্য) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #fff;
+            font-family: Arial, sans-serif;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* ২. ফুল স্ক্রিন ডিজাইন (আপনার স্ক্রিনশটের মতো) */
+        .barcode-row {
+            width: 100vw; 
+            border-bottom: 1px solid #000; /* কাটার সুবিধার্থে কালো দাগ */
+            padding: 15px 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .shop-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .product-name {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        /* ৩. বারকোড বক্স - সংখ্যা বড় হলেও ডিজাইন ফিক্সড রাখবে */
+        .barcode-svg-wrapper {
+            width: 180px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .price {
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: -2px;
+        }
+
+        /* ৪. যেকোনো প্রিন্টারে সাপোর্ট করার জন্য প্রিন্ট সেটিংস */
+        @media print {
+            @page {
+                margin: 0; /* কাগজের ধারের সাদা গ্যাপ রিমুভ করবে */
+            }
+            body {
+                margin: 0;
+            }
+            .barcode-row {
+                width: 100%; /* সব ধরনের পেপার সাইজে এডজাস্ট হবে */
+                page-break-inside: avoid;
+            }
+            .no-print {
+                display: none; /* প্রিন্টের সময় বাটন হাইড করবে */
+            }
+        }
+
+        /* প্রিন্ট বাটন (সুবিধার জন্য) */
+        .print-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">Print</button>
+
+    <div id="barcode-list">
+        <div class="barcode-row">
+            <div class="shop-name">Fashion Demo</div>
+            <div class="product-name">Smart Kurti</div>
+            <div class="barcode-svg-wrapper">
+                <svg id="barcode-1"></svg>
+            </div>
+            <div class="price">Price 1,000.00 TK</div>
+        </div>
+    </div>
+
+<script>
+    // এখানে বারকোড নম্বরটি দিন (সংখ্যা বড় হলেও সমস্যা নেই)
+    const myCode = "865111592026"; 
+
+    // বারকোড জেনারেটর কল
+    JsBarcode("#barcode-1", myCode, {
+        format: "CODE128",
+        displayValue: true,
+        fontSize: 16,
+        height: 45,
+        width: 2,
+        flat: true, // এটিই নিশ্চিত করে সব প্রিন্টারে সাইজ ঠিক থাকা
+        margin: 0
+    });
+</script>
+
+</body>
+</html>
