@@ -128,10 +128,42 @@
 
 
 
+
+
+
+
+
+
 @php
     $qty = 10;
 @endphp
 
-@foreach ($qty as $items)
+{{-- ১ থেকে ১০ পর্যন্ত লুপ চলবে --}}
+@for ($i = 0; $i < $qty; $i++)
+    <div class="barcode-row">
+        <div class="shop-name">Fashion Demo</div>
+        <div class="product-name">Smart Kurti</div>
+        <div class="barcode-svg-wrapper">
+            <svg class="barcode-item" data-code="86511159"></svg>
+        </div>
+        <div class="price">Price 1,000.00 TK</div>
+    </div>
+@endfor
 
-@endforeach
+<script>
+    // লুপের পর সব বারকোড একসাথে জেনারেট করার জন্য
+    document.querySelectorAll('.barcode-item').forEach(function(el) {
+        JsBarcode(el, el.getAttribute('data-code'), {
+            format: "CODE128",
+            displayValue: true,
+            fontSize: 16,
+            height: 45,
+            width: 2,
+            flat: true,
+            margin: 0
+        });
+    });
+</script>
+
+
+
